@@ -50,7 +50,7 @@ python run.py
 POST http://127.0.0.1:5000/webhook/receiver
 ```
 
-![Webhook UI](screenshots/ui.png)
+![Webhook UI](ui.png)
 
 **↑ GitHub Webhook Frontend showing real-time updates**
 
