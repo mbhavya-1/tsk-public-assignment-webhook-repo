@@ -12,7 +12,7 @@ const EventList = () => {
 
       // axios is used to fetch data from backend
       const response = await axios.get("http://localhost:5000/webhook/get-updates");
-      setEvents(response.data);
+      setEvents(response.data.reverse());
     } catch (error) {
       console.error("Error fetching events:", error);
     }
@@ -43,7 +43,7 @@ const EventList = () => {
 
   return (
     <div>
-        <h2 className="semiHeading">Github Actions (Push/Post/Merge) on "action-repo"</h2>
+        <h2 className="semiHeading">Github Actions (Push/Post/Merge) on "action-repo" [Latest Changes Above]</h2>
         <ul className="content">
           {/* looping over the events list and displaying all the events (github actions) as a list */}
           {events.map((event, index) => (
