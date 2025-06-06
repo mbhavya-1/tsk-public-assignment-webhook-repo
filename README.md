@@ -6,10 +6,26 @@ This project listens to GitHub webhook events (Push, Pull Request, Merge), store
 
 ## Setup : For using this Repositry
 
+* Repositories Overview
+
+action-repo: A GitHub repo where actions like Push, PR, and Merge occur. Webhooks are configured here.
+tsk-public-assignment-webhook-repo: This Flask app receives GitHub webhook payloads, processes them, and stores relevant data in MongoDB.
+
+* Tech Stack
+
+Backend: Flask (Python)
+Database: MongoDB (MongoDB Atlas)
+Frontend: React.js (periodically fetches and displays events)
+Others: Ngrok (for exposing localhost to GitHub), Axios, Flask-CORS
+
+* Initial Setup
+  Clone the repo.
+  Create a .env file with your MongoDB URI.
+  
 * Activate the virtual env
 
 ```bash
-source venv/bin/activate
+.\venv\Scripts\activate
 ```
 
 * Install requirements
@@ -23,6 +39,10 @@ pip install -r requirements.txt
 ```bash
 python run.py
 ```
+*Run Ngork:
+```bash
+.\venv\Scripts\ngrok.exe http 5000
+```
 
 * The endpoint is at:
 
@@ -30,6 +50,21 @@ python run.py
 POST http://127.0.0.1:5000/webhook/receiver
 ```
 
-You need to use this as the base and setup the flask app. Integrate this with MongoDB (commented at `app/extensions.py`)
+![Webhook UI](screenshots/ui.png)
+
+**↑ GitHub Webhook Frontend showing real-time updates**
+
+## Note
+
+* GitHub Webhook should be configured to send:
+  push
+  pull_request
+  pull_request with merged status
+
+* Use Ngrok to expose Flask locally and register it as GitHub Webhook URL.
+
+Action Repo used for this Project: https://github.com/mbhavya-1/action-repo
+
+* Author: Bhavya Mehta
 
 *******************
