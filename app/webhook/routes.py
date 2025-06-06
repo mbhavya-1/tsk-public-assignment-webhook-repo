@@ -1,35 +1,28 @@
 from flask import Blueprint, json, request, jsonify
+
+# Importing MongoDB
 from app.extensions import collection
 
 webhook = Blueprint('Webhook', __name__, url_prefix='/webhook')
 
 
-@webhook.route('/test-mongo', methods=["GET"])
-def test_mongo():
-    try:
-        # Try to insert a test document
-        test_doc = {"test": "connection"}
-        collection.insert_one(test_doc)
-        # Try to read it back
-        result = collection.find_one({"test": "connection"})
-        # Clean up: remove the test document
-        collection.delete_one({"test": "connection"})
-        return jsonify({"success": True, "result": str(result)}), 200
-    except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
-    
-
 @webhook.route('/receiver', methods=["POST"])
 def receiver():
+
+    # receiving the json data from action-repo
     if request.headers.get('Content-Type') == 'application/json':
         payload = request.json
-        event_type = request.headers.get('X-GitHub-Event')  # to verify it's a PR event
 
+        # Extracting the event_type from json, i.e. Push, Pull or Merge
+        event_type = request.headers.get('X-GitHub-Event')
+
+
+        # Checking the type of event and inserting the data in MngoDB accordingly
         if event_type == 'pull_request':
             pr = payload.get("pull_request", {})
             action = payload.get("action")
 
-            # Check if it was merged
+
             is_merged = pr.get("merged", False)
 
             data = {
@@ -41,7 +34,7 @@ def receiver():
                 "timestamp": pr.get("updated_at")
             }
 
-            print(data)
+            # Inserting daat to MongoDB
             collection.insert_one(data)
             return jsonify({"message": "Pull Request data saved"}), 200
 
@@ -55,7 +48,6 @@ def receiver():
                 "timestamp": payload.get("head_commit", {}).get("timestamp")
             }
 
-            print(data)
             collection.insert_one(data)
             return jsonify({"message": "Push data saved"}), 200
         
@@ -64,6 +56,8 @@ def receiver():
     return jsonify({"error": "Invalid Content-Type"}), 400
 
 @webhook.route('/get-updates', methods=["GET"])
+
+# Function to deliver data to frontend on GET Request 
 def get_updates():
     events = list(collection.find({}, {"_id": 0}))  # exclude MongoDB's default _id
     return jsonify(events)

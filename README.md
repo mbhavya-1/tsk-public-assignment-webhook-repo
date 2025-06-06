@@ -1,22 +1,10 @@
-# Dev Assessment - Webhook Receiver
+# TechStaX : Dev Assessment - Webhook Receiver
 
-Please use this repository for constructing the Flask webhook receiver.
+This project listens to GitHub webhook events (Push, Pull Request, Merge), stores them in a MongoDB database, and serves the data to a frontend that displays the latest repository activity in real-time.
 
-*******************
+******
 
-## Setup
-
-* Create a new virtual environment
-
-```bash
-pip install virtualenv
-```
-
-* Create the virtual env
-
-```bash
-virtualenv venv
-```
+## Setup : For using this Repositry
 
 * Activate the virtual env
 
